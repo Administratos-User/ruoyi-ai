@@ -81,6 +81,14 @@ public class SseServiceImpl implements ISseService {
             chatRequest.setRole(Message.Role.USER.getName());
 
             if(LoginHelper.isLogin()){
+
+                // deductToken 中判断这个为null 就会取消扣费 设置用户id
+                chatRequest.setUserId(LoginHelper.getUserId());
+                
+                // deductToken 中判断这个为null 就会取消扣费（但是这个地方也获取不到SessionId）  设置会话id 
+                //chatRequest.setSessionId(chatRequest.getChatId()); 我是再前端传递了一个uuid来代替这个的
+                chatRequest.setSessionId(1L);
+                
                 // 保存消息记录 并扣除费用
                 chatCostService.deductToken(chatRequest);
                 chatRequest.setUserId(chatCostService.getUserId());
